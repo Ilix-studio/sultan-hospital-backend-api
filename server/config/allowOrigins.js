@@ -1,3 +1,3 @@
-const allowOrigins = ["https://sultanhospital.in"];
+const allowOrigins = ["https://sultanhospital.in/"];
 
 export default allowOrigins;
