@@ -29,12 +29,11 @@ app.use(express.urlencoded({ limit: "30mb", extended: true }));
 app.use(cors(corsOptions));
 app.use(cookieParser());
 
+app.get("/", (req, res) => res.send("server is ready"));
 app.use("/api/form", appointmentFormRoute);
 app.use("/api/admin", loginRoutes);
 
 app.use(routeNotFound);
 app.use(errorHandler);
-
-app.get("/", (req, res) => res.send("server is ready"));
 
 app.listen(port, () => console.log(`Listening at http://localhost:${port}`));
