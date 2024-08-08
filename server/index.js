@@ -31,20 +31,19 @@ app.use(cookieParser());
 
 app.use("/api/form", appointmentFormRoute);
 app.use("/api/admin", loginRoutes);
+
+app.all("*", (req, res) => {
+  res.status(404);
+  if (req.accepts("html")) {
+    res.sendFile(path.join(__dirname, "views", "404.html"));
+  } else if (req.accepts("json")) {
+    res.json({ message: "404 Not Found" });
+  } else {
+    res.type("txt").send("404 Not Found");
+  }
+});
 app.use(routeNotFound);
 app.use(errorHandler);
-
-//serve frontend
-if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname, "../client/build")));
-  app.get("*", (req, res) => {
-    res.sendFile(
-      path.resolve(__dirname, "../", "client", "build", "index.html")
-    );
-  });
-} else {
-  app.get("/", (req, res) => res.send("Please set to production"));
-}
 
 app.get("/", (req, res) => res.send("server is ready"));
 
