@@ -1,15 +1,9 @@
-import allowOrigins from './allowOrigins.js'
-
 const corsOptions = {
-  origin: (origin, callback) => {
-    if (allowOrigins.indexOf(origin) !== -1 || !origin) {
-      callback(null, true)
-    } else {
-      callback(new Error('Not allowed by CORS'))
-    }
-  },
+  origin: "https://sultanhospital.in/",
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true,
   optionsSuccessStatus: 200,
-}
+};
 
-export default corsOptions
+export default corsOptions;

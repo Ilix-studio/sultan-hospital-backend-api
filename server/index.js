@@ -19,14 +19,11 @@ connectDB();
 
 const app = express();
 
-// Convert the module URL to a file path
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
 //use middleware
 app.use(express.json({ limit: "30mb" }));
 app.use(express.urlencoded({ limit: "30mb", extended: true }));
 app.use(cors(corsOptions));
+
 app.use(cookieParser());
 
 app.get("/", (req, res) => res.send("server is ready"));
