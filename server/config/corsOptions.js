@@ -1,6 +1,7 @@
 const allowOrigins = [
   "https://sultanhospital.in",
   "https://sultanhospital.in/login",
+  "",
 ];
 const corsOptions = {
   origin: (origin, callback) => {
