@@ -35,7 +35,10 @@ app.get("/", (req, res) => res.send("server is ready"));
 app.use("/api/form", appointmentFormRoute);
 app.use("/api/admin", loginRoutes);
 
-app.use("/", express.static(path.join(__dirname, "public_html")));
+app.use("/", express.static(path.join(__dirname, "build")));
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "build", "index.html"));
+});
 
 app.use(routeNotFound);
 app.use(errorHandler);
