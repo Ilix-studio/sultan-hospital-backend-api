@@ -1,8 +1,6 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import path from "path";
-import { fileURLToPath } from "url";
 import appointmentFormRoute from "./routes/appointmentFormRoute.js";
 import loginRoutes from "./routes/loginRoute.js";
 import { errorHandler, routeNotFound } from "./middleware/errorMiddleware.js";
@@ -26,19 +24,10 @@ app.use(cors(corsOptions));
 
 app.use(cookieParser());
 
-// Convert the module URL to a file path
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
 app.get("/", (req, res) => res.send("server is ready"));
 
 app.use("/api/form", appointmentFormRoute);
 app.use("/api/admin", loginRoutes);
-
-app.use("/", express.static(path.join(__dirname, "build")));
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "build", "index.html"));
-});
 
 app.use(routeNotFound);
 app.use(errorHandler);
