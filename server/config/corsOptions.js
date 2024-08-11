@@ -1,6 +1,7 @@
 const allowOrigins = [
   "https://sultanhospital.in",
   "https://sultanhospital.in/login",
+  "http://localhost:5000",
 ];
 const corsOptions = {
   origin: (origin, callback) => {
