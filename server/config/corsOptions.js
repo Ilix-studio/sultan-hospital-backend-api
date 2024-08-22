@@ -1,7 +1,6 @@
 const allowOrigins = [
   "https://sultanhospital.in",
-  "http://localhost:3000 ",
-  // "https://sh-stag1.onrender.com",
+  "http://localhost:3000",
 ];
 const corsOptions = {
   origin: (origin, callback) => {
