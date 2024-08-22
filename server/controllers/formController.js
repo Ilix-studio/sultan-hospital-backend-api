@@ -157,15 +157,15 @@ const createAppointment = asyncHandler(async (req, res) => {
   }
 
   try {
-    // Convert date string to a JavaScript Date object
+    // Convert the date string to a Date object
     const appointmentDate = new Date(date);
 
     // Extract only the date part (ignoring time) for comparison
     const startOfDay = new Date(appointmentDate);
-    startOfDay.setHours(0, 0, 0, 0);
+    startOfDay.setUTCHours(0, 0, 0, 0);
 
     const endOfDay = new Date(appointmentDate);
-    endOfDay.setHours(23, 59, 59, 999);
+    endOfDay.setUTCHours(23, 59, 59, 999);
 
     // Check if an appointment already exists for the same phone number and date
     const existingAppointment = await Appointment.findOne({
@@ -185,7 +185,7 @@ const createAppointment = asyncHandler(async (req, res) => {
     const newAppointment = new Appointment({
       patientName,
       phoneNumber,
-      date: appointmentDate, // Store the date as is
+      date: appointmentDate, // Store the exact date received
       timeSchedule,
     });
 
@@ -197,11 +197,10 @@ const createAppointment = asyncHandler(async (req, res) => {
 
     res.status(201).json(appointmentCreated);
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: `Failed to create appointment: ${error.message}` });
+    res.status(500).json({ message: `Failed to create appointment: ${error.message}` });
   }
 });
+
 
 //update an appointment
 //PUT Request - /api/form/update/:id
@@ -257,16 +256,20 @@ const updateAppointment = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const { patientName, phoneNumber, timeSchedule, date } = req.body;
 
+  // Validate required fields
+  if (!patientName || !phoneNumber || !date || !timeSchedule) {
+    return res.status(400).json({ message: 'All fields are required' });
+  }
+
   try {
     // Convert date string to a JavaScript Date object
     const appointmentDate = new Date(date);
-
     // Extract only the date part (ignoring time) for comparison
     const startOfDay = new Date(appointmentDate);
-    startOfDay.setHours(0, 0, 0, 0);
+    startOfDay.setUTCHours(0, 0, 0, 0);
 
     const endOfDay = new Date(appointmentDate);
-    endOfDay.setHours(23, 59, 59, 999);
+    endOfDay.setUTCHours(23, 59, 59, 999);
 
     // Check if an appointment already exists for the same phone number and date
     const existingAppointment = await Appointment.findOne({
@@ -278,16 +281,17 @@ const updateAppointment = asyncHandler(async (req, res) => {
     });
 
     if (existingAppointment && existingAppointment._id.toString() !== id) {
-      return res.status(400).json({ message: "An appointment already exists for this date and phone number" });
+      return res.status(400).json({ message: 'An appointment already exists for this date and phone number' });
     }
 
+    // Find and update the appointment
     const appointment = await Appointment.findOneAndUpdate(
       { _id: id },
       {
         patientName,
         phoneNumber,
         timeSchedule,
-        date: appointmentDate, // Update with local date
+        date: appointmentDate, // Update with the selected date
       },
       { new: true }
     );
@@ -295,12 +299,13 @@ const updateAppointment = asyncHandler(async (req, res) => {
     if (appointment) {
       res.json(appointment);
     } else {
-      res.status(404).json({ message: "Appointment not found" });
+      res.status(404).json({ message: 'Appointment not found' });
     }
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: `Failed to update appointment: ${error.message}` });
   }
 });
+
 
 //delete appointment
 //DEL Request - /api/form/delete/:id
